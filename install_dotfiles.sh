@@ -2,10 +2,10 @@
 
 DOTPATH=~/.dotfiles
 
-for f in .??*
-do
+for f in .??*; do
     [ "$f" = ".git" ] && continue
 
-    cp -r "$DOTPATH/$f" "$HOME"/"$f"
+    cp -r $DOTPATH/$f ~/
 done
 
+mkdir $HOME/gomibako
