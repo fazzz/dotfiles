@@ -1,0 +1,3 @@
+defconfig utf-8
+escape ^Zz
+startup_message off

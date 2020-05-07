@@ -1,0 +1,300 @@
+# Created0 by newuser for 4.3.10
+PATH=$HOME/bin:$PATH
+PATH=$HOME/local/bin:$PATH
+PATH=$PATH:/home/shun/usr/bin/
+PATH=$PATH:/home/Ryuhei/software/R-2.91/bin/R
+PATH=$PATH:/home/software/LAPACK
+PATH=$PATH:/home/software/BLAS
+PATH=$PATH:/home/software/numpy-1.6.0/numpy
+PATH=$PATH:/home/software/numpy-1.6.0/build
+PATH=$PATH:/home/software/numpy-1.6.0/
+PATH=$PATH:/home/yamamori/lib/python2.7/site-packages/numpy/core/lib
+PATH=$PATH:$HOME/mybin/
+PSTH=$PATH:/home/yamamori/software/mgltools_i86Linux2_1.5.4/bin
+#LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/home/yamamori/mylib:/home/yamamori/lib:/home/yamamori/lib/glib-2.0
+#LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/home/yamamori/lib/tk8.4:/home/yamamori/lib/tcl8.4
+#LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/home/yamamori/lib/
+
+##########################
+# enviromental variables #
+##########################
+
+WORK=$HOME/work
+DATA=$HOME/work/data
+PROG=$HOME/work/programs
+COMPILE=$HOME/work/programs/compile
+SCRIPT=$HOME/work/scripts
+PDB=$HOME/work/pdb
+INPUT=$HOME/calspa/input
+CASP=$HOME/calspa
+TEST=$HOME/test
+COMT=$HOME/calspa/command_tamd
+COMA=$HOME/calspa/command_anal
+COMK=$HOME/calspa/command_amber
+RSPA=$HOME/Rspa
+MLIB=$HOME/mylib
+MINC=$HOME/myinclude
+GMBX=$HOME/gomibako
+ivy=/misc/ivy3/yamamori
+ivyajisai=/misc/ivy3/yamamori/ajisai
+
+PATH=$PATH:$HOME/$SCRIPT/gnuplot
+PYTHONPATH=~/software/pymbar-2.0beta
+
+export PATH
+export PYTHONPATH
+#export LD_LIBRARY_PATH
+unset USERNAME
+
+#########################################
+# export LDFLAGS='-xlinker -R$HOME/lib' #
+#########################################
+
+export WORK
+export DATA
+export PROG
+export COMPILE
+export SCRIPT
+export PDB
+export INPUT
+export CASP
+export COMT
+export COMA
+export COMK
+export RSPA
+export MLIB
+export MINC
+
+export EDITOR=emacs
+
+yuMD=$HOME/work/programs/yuMD
+anl=$HOME/work/programs/yuMD/anl
+bin=$HOME/work/programs/yuMD/bin
+lib=$HOME/work/programs/yuMD/lib
+src=$HOME/work/programs/yuMD/src
+man=$HOME/work/programs/yuMD/man
+tst=$HOME/work/programs/yuMD/tst
+
+export yuMD
+export anl
+export bin
+export lib
+export src
+export man
+export tst
+
+##########################
+# enviromental variables #
+##########################
+
+source $HOME/calspa/command_amber/RES.sh
+
+##########################
+# functions #
+##########################
+
+
+myrm() { mv -b $* $HOME/gomibako }
+lp() { ls $(pwd)/$*  }
+#ld() { ls -F ${1} | grep / }
+ht() { head -${1} ${2} | tail -1  }
+htn() { cat -n ${2} | head -${1} | tail -1  }
+
+nc() { /bin/gawk '{if(NR=='${1}'){print NF}}' < ${2} } 	      
+
+qdelall() {qdel $( q | grep yamamori | /bin/gawk \'BEGIN{FS=\".\";i=0}{print $1;++i}\')}
+qi() {(q | grep $1  | gawk 'BEGIN{FS=" ";i=0}{print $1;++i}')}
+qin() {echo $(q | grep $1  | gawk 'BEGIN{FS=" ";i=0}{print $1;++i}' | wc -l)}
+#qpasstime 
+ncs() {ncdump -h $1 | grep 'UNLIMITED'}
+ncs2() {ncdump -h $1 | grep 'UNLIMITED' | cut -d " " -f6-7 }
+ncss() { for f in $* ;do echo -n $f;  ncdump -h $f | grep 'UNLIMITED'; done }
+
+cn() { cat  -n $1 > temp; mv temp $1 }
+cutext() { echo $1 | cut -d "." -f1 }
+
+##########################
+# functions #
+##########################
+
+##########################
+# alias #
+##########################
+
+#alias "tleapff99=tleap -s -f /usr/local/amber7/dat/leap/cmd/leaprc.ff99"
+#alias "xleapff99=xleap -s -f /usr/local/amber7/dat/leap/cmd/leaprc.ff99"
+alias "tleapff99=tleap -s -f /usr/local/amber8/dat/leap/cmd/leaprc.ff99"
+alias "xleapff99=xleap -s -f /usr/local/amber8/dat/leap/cmd/leaprc.ff99"
+
+alias "q=qstat -u yamamori"
+alias "qu=qstat -u "
+#alias "qa=qstat -a"
+alias "qa=qstat -u \"*\" "
+alias "qmo=q | mo"
+alias "qn=q | grep -G yamamori | wc -l"
+alias "qnr=q | grep -G @ajisai | wc -l"
+alias "qnode=q | grep -G yamamori | gawk 'BEGIN{i=0}{i=i+\$9}END{print i}'"
+alias "qf=qstat -f"
+alias "qq=qstat -q"
+alias "sq=showq"
+alias "cj=checkjob"
+#alias "qdelall=qdel \$(q | grep yamamori | gawk 'BEGIN{FS=".";i=0}{print '$1';++i}')"
+
+alias "a=alias"
+alias "cpuinfo=cat /proc/cpuinfo"
+alias "g=~/bin/gnuplot"
+alias "g4.6=~/bin/gnuplot"
+alias "g4.0=gnuplot"
+alias "gnuplot4.6=~/bin/gnuplot"
+alias "l=ls -G --color=auto"
+alias "la=ls -a --color=auto"
+alias "lt=ls -t -color=auto"
+alias "lal=ls -al -color=auto"
+alias "ll=ls -l -color=auto"
+alias "lg=ls -G --color=auto ~/gomibako;du -hs"
+alias "lc=ls -G --color=auto ~/calspa;du * -hs;du -hs"
+alias "lsd=find . -maxdepth 1 -type d"
+alias "j=jobs"
+alias "p=pwd"
+alias "mo=more"
+alias "le=less"
+alias "w=who"
+alias "ta=tail"
+alias "he=head"
+alias "HM=date +"%H-%M""
+alias "c=clear"
+alias "ca=cat"
+alias "comp=${COMPILE}/compile.sh"
+alias "d=du -hs"
+alias "dis=display"
+alias "dateymd=date +"%Y-%m-%d""
+alias "his=history"
+alias "f=finger"
+alias "gp=grep"
+alias "gv=grep -v"
+alias "ruby=~/ruby/bin/ruby"
+alias "rb=~/ruby/bin/ruby"
+alias "python=~/bin/python"
+alias "py=~/bin/python"
+#alias "python=~/bin/python3.2"
+#alias "py=~/bin/python3.2"
+alias "s=source"
+alias "em=$HOME/bin/emacs"
+alias "e=$HOME/bin/emacs"
+alias "t=top"
+alias "txvf=tar xvf"
+alias "rm=myrm"
+alias "lcs=qstat -a | grep -G serial | wc -l"
+alias "lcp=qstat -a | grep -G perallel | wc -l"
+alias "m=${COMPILE}/makelib.sh"
+alias "qg=q | grep -G"
+alias "qj=q | grep -G ajisai"
+alias "qr=q | grep @"
+alias "qfg=qf | grep all.q@ajisai"
+alias "R=~/bin/R"
+alias "sourcez=source ~/.zshrc"
+alias "sz=source ~/.zshrc"
+alias "res=grep -A 5 RESIDUE_LABEL"
+alias "v=vmd"
+alias "version=cat/proc/version"
+alias "val=valgrind -v --error-limit=no --leak-check=full"
+alias "w3mgoogle=w3m -e http://www.google.co.jp"
+#alias "w3mhateblog=w3m -e wagawasurenaba.hatenablog.com"
+#alias "whileread=while read i ; do echo $i ; done < test"
+
+alias "catdcd=~/software/vmd-1.9/plugins/LINUXAMD64/bin/catdcd4.0/catdcd"
+alias "nekodcd=~/software/vmd-1.9/plugins/LINUXAMD64/bin/catdcd4.0/catdcd"
+
+alias "karin=ssh karin00"
+alias "karin=ssh kusu"
+
+##########################
+# alias #
+##########################
+
+fpath=(~/share/zsh/4.2.7/functions ${fpath})
+autoload -U compinit
+compinit
+
+setopt auto_cd
+
+#######################
+# autoload predict-on #
+# 		      #
+# predict-on	      #
+#######################
+
+#PROMPT="%/%% "
+#PROMPT2="%{[31m%}%/%%%{^[[m%} "
+#SPROMPT="%{[31m%}%r is correct? [n,y.a,e]:%{^[]m%} "
+
+### from TKMR-san ###
+
+# export LANG=ja_JP.UTF-8
+export LANG=C
+
+case ${UID} in
+0)
+    PROMPT="%B%{[31m%}%/#%{[m%}%b "
+    PROMPT2="%B%{[31m%}%_#%{[m%}%b "
+    SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{[m%}%b "
+    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+    ;;
+*)
+    PROMPT="%{[34m%}%/%%%{[m%} "
+#   PROMPT="%{[34m%}%%[m%} "
+#   RPROMPT="%{[32m%}[%d]%{[m%} "
+    PROMPT2="%{[32m%}%_%%%{[m%} "
+    SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
+    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+        PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+    ;;
+esac
+
+case "${TERM}" in
+kterm*|xterm)
+    precmd() {
+#       echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
+        echo -ne "\033]0;@${HOST%%.*}\007"
+    }
+    ;;
+esac
+
+case "$TERM" in
+    xterm*|kterm*|rxvt*)
+    PROMPT=$(print "%B%{\e[34m%}%m:%(5~,%-2~/.../%2~,%~)%{\e[33m%}%# %b")
+    PROMPT=$(print "%{\e]2;%n@%m: %~\7%}$PROMPT") # title bar
+    ;;
+    *)
+    PROMPT='%m:%c%# '
+    ;;
+esac
+
+zmodload -i zsh/mathfunc
+
+### from TKMR-san ###
+
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt hist_ignore_dups
+
+setopt share_history
+
+bindkey -e
+
+[[ $EMACS = t ]] && unsetopt zle
+
+bindkey "^P" history-beginning-search-backward
+
+bindkey "^N" history-beginning-search-forward
+
+autoload zmv
+alias 'zmv=noglob zmv -W'
+#autoload zcp
+alias "zcp=noglob zmv -W -C"
+
+autoload zed
+
