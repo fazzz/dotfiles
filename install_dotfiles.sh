@@ -6,6 +6,6 @@ for f in .??*
 do
     [ "$f" = ".git" ] && continue
 
-    ln -snfv "$DOTPATH/$f" "$HOME"/"$f"
+    cp -r "$DOTPATH/$f" "$HOME"/"$f"
 done
 
