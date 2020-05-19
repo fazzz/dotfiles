@@ -1,0 +1,477 @@
+This is ess.info, produced by makeinfo version 4.2 from ess.texi.
+
+ESS -- Emacs Speaks Statistics
+******************************
+
+INFO-DIR-SECTION Emacs
+START-INFO-DIR-ENTRY
+* ESS: (ess). Emacs Speaks Statistics (S/S+/R, SAS, BUGS/JAGS, Stata, XLisp-Stat).
+END-INFO-DIR-ENTRY
+
+
+File: ess.info,  Node: Imenu,  Next: Toolbar,  Prev: Graphics,  Up: Miscellaneous
+
+Imenu
+=====
+
+   Imenu is an Emacs tool for providing mode-specific buffer indexes.
+In some of the ESS editing modes (currently SAS and S), support for
+Imenu is provided.  For example, in S mode buffers, the menubar should
+display an item called "Imenu-S".  Within this menubar you will then be
+offered bookmarks to particular parts of your source file (such as the
+starting point of each function definition).
+
+   Imenu works by searching your buffer for lines that match what ESS
+thinks is the beginning of a suitable entry, e.g. the beginning of a
+function definition.  To examine the regular expression that ESS uses,
+check the value of `imenu-generic-expression'.  This value is set by
+various ESS variables such as `ess-imenu-S-generic-expression'.
+
+
+File: ess.info,  Node: Toolbar,  Next: TAGS,  Prev: Imenu,  Up: Miscellaneous
+
+Toolbar
+=======
+
+   The R and S editing modes have support for a toolbar.  This toolbar
+provides icons to act as shortcuts for starting new S/R processes, or
+for evaluating regions of your source buffers.  The toolbar should be
+present if your emacs can display images.  *Note Customization::, for
+ways to change the toolbar.
+
+
+File: ess.info,  Node: TAGS,  Next: Rdired,  Prev: Toolbar,  Up: Miscellaneous
+
+TAGS
+====
+
+   The Emacs tags facility can be used to navigate around your files
+containing definitions of S functions.  This facility is independent of
+ESS usage, but is written here since ESS users may wish to take
+advantage of TAGS facility.  Read more about emacs tags in an emacs
+manual.
+
+   Etags, the program that generates the TAGS file, does not yet know
+the syntax to recognise function definitions in S files.  Hence, you
+will need to provide a regexp that matches your function definitions.
+Here is an example call (broken over two lines; type as one line) that
+should be appropriate.
+
+     etags --language=none
+     --regex='/\([^ \t]+\)[ \t]*<-[ \t]*function/\1/' *.R
+
+   This will find entries in your source file of the form:
+
+     some.name <- function
+
+   with the function name starting in column 0.  Windows users may need
+to change the single quotes to double quotes.
+
+   R version 2.9.0 introduced a front-end script for finding R tags,
+which calls the `rtags()' function).  By default, this script will
+recursively search the directories for relevant tags in R/C/Rd files.
+To use this script from the command line, try the following to get
+started:
+
+     R CMD rtags --help
+
+
+File: ess.info,  Node: Rdired,  Prev: TAGS,  Up: Miscellaneous
+
+Rdired
+======
+
+   Ess-rdired provides a dired-like buffer for viewing, editing and
+plotting objects in your current R session.  If you are used to using
+the dired (directory editor) facility in Emacs, this mode gives you
+similar functionality for R objects.
+
+   To get started, first make sure you can load ess-rdired.  Add the
+following to your .emacs and then restart emacs.
+     (autoload 'ess-rdired "ess-rdired"
+       "View *R* objects in a dired-like buffer." t)
+
+   Start an R session with `M-x R' and then store a few variables, such
+as:
+
+     s <- sin(seq(from=0, to=8*pi, length=100))
+     x <- c(1, 4, 9)
+     y <- rnorm(20)
+     z <- TRUE
+
+   Then use `M-x ess-rdired' to create a buffer listing the objects in
+your current environment and display it in a new window:
+                 mode length
+       s      numeric    100
+       x      numeric      3
+       y      numeric     20
+       z      logical      1
+
+   Type `C-h m' or `?' to get a list of the keybindings for this mode.
+For example, with your point on the line of a variable, `p' will plot
+the object, `v' will view it, and `d' will mark the object for deletion
+(`x' will actually perform the deletion).
+
+
+File: ess.info,  Node: Mailing lists/bug reports,  Next: Customization,  Prev: Miscellaneous,  Up: Top
+
+Bugs and Bug Reporting, Mailing Lists
+*************************************
+
+* Menu:
+
+* Bugs::
+* Reporting Bugs::
+* Mailing Lists::
+* Help with emacs::
+
+
+File: ess.info,  Node: Bugs,  Next: Reporting Bugs,  Prev: Mailing lists/bug reports,  Up: Mailing lists/bug reports
+
+Bugs
+====
+
+   * Commands like `ess-display-help-on-object' and list completion
+     cannot be used while the user is entering a multi-line command.
+     The only real fix in this situation is to use another ESS process.
+
+   * The `ess-eval-' commands can leave point in the ESS process buffer
+     in the wrong place when point is at the same position as the last
+     process output.  This proves difficult to fix, in general, as we
+     need to consider all _windows_ with `window-point' at the right
+     place.
+
+   * It's possible to clear the modification flag (say, by saving the
+     buffer) with the edit buffer not having been loaded into S.
+
+   * Backup files can sometimes be left behind, even when
+     `ess-keep-dump-files' is `nil'.
+
+   * Passing an incomplete S expression to `ess-execute' causes ESS to
+     hang.
+
+   * The function-based commands don't always work as expected on
+     functions whose body is not a parenthesized or compound
+     expression, and don't even recognize anonymous functions (i.e.
+     functions not assigned to any variable).
+
+   * Multi-line commands could be handled better by the command history
+     mechanism.
+
+   * Changes to the continutation prompt in R (e.g.  `options(continue
+     = "    ")') are not automatically detected by ESS.  Hence, for
+     now, the best thing is not to change the continuation prompt.  If
+     you do change the continuation prompt, you will need to change
+     accordingly the value of `inferior-ess-secondary-prompt' in
+     `R-customize-alist'.
+
+
+
+File: ess.info,  Node: Reporting Bugs,  Next: Mailing Lists,  Prev: Bugs,  Up: Mailing lists/bug reports
+
+Reporting Bugs
+==============
+
+   Please send bug reports, suggestions etc. to
+<ESS-bugs@stat.math.ethz.ch>
+
+   The easiest way to do this is within Emacs by typing
+
+   `M-x ess-submit-bug-report'
+
+   This also gives the maintainers valuable information about your
+installation which may help us to identify or even fix the bug.
+
+   If Emacs reports an error, backtraces can help us debug the problem.
+Type "M-x set-variable RET debug-on-error RET t RET".  Then run the
+command that causes the error and you should see a *Backtrace* buffer
+containing debug information; send us that buffer.
+
+   Note that comments, suggestions, words of praise and large cash
+donations are also more than welcome.
+
+
+File: ess.info,  Node: Mailing Lists,  Next: Help with emacs,  Prev: Reporting Bugs,  Up: Mailing lists/bug reports
+
+Mailing Lists
+=============
+
+   There is a mailing list for discussions and announcements relating to
+ESS.  Join the list by sending an e-mail with "subscribe ess-help" (or
+"help") in the body to <ess-help-request@stat.math.ethz.ch>;
+contributions to the list may be mailed to
+<ess-help@stat.math.ethz.ch>.  Rest assured, this is a fairly
+low-volume mailing list.
+
+   The purposes of the mailing list include
+
+   *  helping users of ESS to get along with it.
+
+   *  discussing aspects of using ESS on Emacs and XEmacs.
+
+   *  suggestions for improvements.
+
+   *  announcements of new releases of ESS.
+
+   *  posting small patches to ESS.
+
+
+File: ess.info,  Node: Help with emacs,  Prev: Mailing Lists,  Up: Mailing lists/bug reports
+
+Help with emacs
+===============
+
+   Emacs is a complex editor with many abilities that we do not have
+space to describe here.  If you have problems with other features of
+emacs (e.g. printing), there are several sources to consult, including
+the emacs FAQs (try `M-x xemacs-www-faq' or `M-x view-emacs-FAQ') and
+EmacsWiki (`http://www.emacswiki.org').  Please consult them before
+asking on the mailing list about issues that are not specific to ESS.
+
+
+File: ess.info,  Node: Customization,  Next: Key Index,  Prev: Mailing lists/bug reports,  Up: Top
+
+Customizing ESS
+***************
+
+   ESS can be easily customized to your taste simply by including the
+appropriate lines in your `.emacs' file.  There are numerous variables
+which affect the behavior of ESS in certain situations which can be
+modified to your liking.  Keybindings may be set or changed to your
+preferences, and for per-buffer customizations hooks are also available.
+
+   Most of these variables can be viewed and set using the Custom
+facility within Emacs.  Type `M-x customize-group RET ess RET' to see
+all the ESS variables that can be customized.  Variables are grouped by
+subject to make it easy to find related variables.
+
+
+File: ess.info,  Node: Key Index,  Next: Concept Index,  Prev: Customization,  Up: Top
+
+Key (Character) Index
+*********************
+
+* Menu:
+
+File: ess.info,  Node: Concept Index,  Next: Variable and command index,  Prev: Key Index,  Up: Top
+
+Concept Index
+*************
+
+* Menu:
+
+* .emacs file <1>:                       Source Directories.
+* .emacs file:                           Indenting.
+* aborting S commands:                   Other.
+* aborting the ESS process:              Other.
+* arguments to S program:                Customizing startup.
+* authors:                               Credits.
+* autosaving:                            Source Files.
+* Bug reports:                           Reporting Bugs.
+* bugs:                                  Bugs.
+* cleaning up:                           Hot keys.
+* comint:                                Credits.
+* command history:                       Command History.
+* command line arguments:                iESS(S)--Inferior ESS processes.
+* command-line completion:               Completion.
+* command-line editing:                  Command-line editing.
+* commands:                              Entering commands.
+* comments:                              Source Files.
+* comments in S:                         Indenting.
+* completion in edit buffer:             Other edit buffer commands.
+* completion of object names:            Completion.
+* completion on file names:              Completion.
+* completion on lists:                   Completion.
+* completion, when prompted for object names: Edit buffer.
+* creating new objects:                  Edit buffer.
+* credits:                               Credits.
+* customization:                         Customization.
+* data frames:                           Completion.
+* debugging S functions:                 Evaluating code.
+* deleting output:                       Last command.
+* directories:                           Starting up.
+* dump file directories:                 Source Directories.
+* dump file names:                       Source Directories.
+* dump files <1>:                        Source Files.
+* dump files:                            Edit buffer.
+* echoing commands when evaluating:      Evaluating code.
+* edit buffer:                           Edit buffer.
+* editing commands:                      Command History.
+* editing functions:                     Editing.
+* editing transcripts:                   Saving transcripts.
+* emacsclient:                           Emacsclient.
+* entering commands:                     Entering commands.
+* errors:                                Error Checking.
+* ESS process buffer:                    Starting up.
+* ESS process directory:                 Starting up.
+* evaluating code with echoed commands:  Evaluating code.
+* evaluating S expressions:              Evaluating code.
+* Font-lock mode:                        Highlighting.
+* formatting source code:                Indenting.
+* graphics:                              Graphics.
+* help files:                            Help.
+* highlighting:                          Highlighting.
+* historic backups:                      Source Files.
+* hot keys:                              Hot keys.
+* indenting:                             Indenting.
+* installation:                          Installation.
+* interactive use of S:                  Introduction.
+* interrupting S commands:               Other.
+* introduction:                          Introduction.
+* keyboard short cuts:                   Hot keys.
+* killing temporary buffers:             Hot keys.
+* killing the ESS process:               Hot keys.
+* lists, completion on:                  Completion.
+* motion in transcript mode:             Transcript Mode.
+* multi-line commands, resubmitting:     Transcript resubmit.
+* Multiple ESS processes:                Multiple ESS processes.
+* new objects, creating:                 Edit buffer.
+* objects:                               Hot keys.
+* pages in the process buffer:           Transcript.
+* paging commands in help buffers:       Help.
+* paragraphs in the process buffer:      Transcript.
+* parsing errors:                        Error Checking.
+* process buffer:                        Starting up.
+* process names:                         Multiple ESS processes.
+* programming in S:                      Introduction.
+* project work in S:                     Source Files.
+* quitting from ESS:                     Hot keys.
+* re-executing commands:                 Command History.
+* reading long command outputs:          Last command.
+* Remote Computers:                      ESS processes on Remote Computers.
+* reverting function definitions:        Edit buffer.
+* roxygen:                               Indenting.
+* running S:                             Starting up.
+* search list <1>:                       Source Directories.
+* search list:                           Hot keys.
+* sending input:                         Entering commands.
+* starting directory:                    Starting up.
+* starting ESS:                          Starting up.
+* stepping through code:                 Evaluating code.
+* STERM:                                 Statistical Process running in ESS?.
+* tcsh:                                  Completion.
+* temporary buffers:                     Help.
+* temporary buffers, killing:            Hot keys.
+* transcript:                            Transcript.
+* transcript file:                       Customizing startup.
+* transcript file names:                 Saving transcripts.
+* transcript mode motion:                Transcript Mode.
+* transcripts of S sessions:             Introduction.
+* using S interactively:                 Introduction.
+* winjava:                               winjava.
+* working directory <1>:                 Source Directories.
+* working directory:                     Starting up.
+* X windows:                             X11.
+
+
+File: ess.info,  Node: Variable and command index,  Prev: Concept Index,  Up: Top
+
+Variable and command index
+**************************
+
+* Menu:
+
+* attach():                              Hot keys.
+* backward-kill-word:                    Command-line editing.
+* comint-backward-matching-input:        Process buffer motion.
+* comint-bol:                            Command-line editing.
+* comint-copy-old-input:                 Transcript resubmit.
+* comint-delimiter-argument-list:        History expansion.
+* comint-dynamic-complete:               Completion.
+* comint-forward-matching-input:         Process buffer motion.
+* comint-input-ring-size:                Command History.
+* comint-interrupt-subjob:               Other.
+* comint-kill-input:                     Command-line editing.
+* comint-kill-output:                    Last command.
+* comint-next-input <1>:                 Command History.
+* comint-next-input:                     Process buffer motion.
+* comint-next-matching-input:            Command History.
+* comint-next-matching-input-from-input: Command History.
+* comint-previous-input <1>:             Command History.
+* comint-previous-input:                 Process buffer motion.
+* comint-previous-matching-input:        Command History.
+* comint-previous-matching-input-from-input: Command History.
+* comint-show-maximum-output:            Last command.
+* comint-show-output:                    Last command.
+* comint-stop-subjob:                    Other.
+* comment-column:                        Indenting.
+* dump():                                Edit buffer.
+* ess-abort:                             Other.
+* ess-ask-about-display:                 X11.
+* ess-ask-about-transfile <1>:           Saving transcripts.
+* ess-ask-about-transfile:               Customizing startup.
+* ess-ask-for-ess-directory:             Customizing startup.
+* ess-beginning-of-function:             Other edit buffer commands.
+* ess-change-sp-regexp:                  Completion details.
+* ess-cleanup <1>:                       Help.
+* ess-cleanup:                           Hot keys.
+* ess-delete-dump-files:                 Source Files.
+* ess-describe-help-mode:                Help.
+* ess-directory:                         Source Directories.
+* ess-display-help-on-object:            Help.
+* ess-dump-filename-template:            Source Directories.
+* ess-dump-object-into-edit-buffer <1>:  Edit buffer.
+* ess-dump-object-into-edit-buffer:      Other.
+* ESS-elsewhere:                         ESS processes on Remote Computers.
+* ess-end-of-function:                   Other edit buffer commands.
+* ess-eval-buffer:                       Evaluating code.
+* ess-eval-function:                     Evaluating code.
+* ess-eval-function-and-go:              Evaluating code.
+* ess-eval-line:                         Evaluating code.
+* ess-eval-line-and-go:                  Evaluating code.
+* ess-eval-line-and-step <1>:            Help.
+* ess-eval-line-and-step:                Evaluating code.
+* ess-eval-region <1>:                   Help.
+* ess-eval-region:                       Evaluating code.
+* ess-eval-region-and-go:                Evaluating code.
+* ess-eval-visibly-p:                    Evaluating code.
+* ess-execute:                           Hot keys.
+* ess-execute-attach:                    Hot keys.
+* ess-execute-in-process-buffer:         Hot keys.
+* ess-execute-in-tb:                     Evaluating code.
+* ess-execute-objects:                   Hot keys.
+* ess-execute-search:                    Hot keys.
+* ess-fancy-comments:                    Indenting.
+* ess-function-template:                 Edit buffer.
+* ess-keep-dump-files:                   Source Files.
+* ess-list-object-completions:           Completion.
+* ess-load-file <1>:                     Loading.
+* ess-load-file:                         Hot keys.
+* ess-parse-errors <1>:                  Error Checking.
+* ess-parse-errors:                      Hot keys.
+* ess-quit <1>:                          Help.
+* ess-quit:                              Other.
+* ess-R-mode-font-lock-keywords:         Highlighting.
+* ess-remote:                            ESS processes on Remote Computers.
+* ess-request-a-process:                 Multiple ESS processes.
+* ess-resynch:                           Completion details.
+* ess-search-list:                       Source Directories.
+* ess-skip-to-help-section:              Help.
+* ess-skip-to-next-section:              Help.
+* ess-skip-to-previous-section:          Help.
+* ess-source-directory:                  Source Directories.
+* ess-submit-bug-report:                 Reporting Bugs.
+* ess-switch-to-end-of-ESS <1>:          Help.
+* ess-switch-to-end-of-ESS:              Other edit buffer commands.
+* ess-switch-to-ESS:                     Other edit buffer commands.
+* ess-transcript-clean-region:           Saving transcripts.
+* ess-transcript-copy-command:           Resubmit.
+* ess-transcript-send-command:           Resubmit.
+* ess-transcript-send-command-and-move:  Transcript resubmit.
+* exit():                                Hot keys.
+* inferior-ess-program:                  Customizing startup.
+* inferior-ess-R-font-lock-keywords:     Highlighting.
+* inferior-ess-send-input <1>:           Transcript resubmit.
+* inferior-ess-send-input:               Command-line editing.
+* objects():                             Hot keys.
+* printer():                             printer.
+* q():                                   Hot keys.
+* S:                                     Starting up.
+* S+elsewhere:                           ESS processes on Remote Computers.
+* search() <1>:                          Hot keys.
+* search():                              Completion.
+* source() <1>:                          Evaluating code.
+* source():                              Loading.
+* STERM:                                 Statistical Process running in ESS?.
+
+

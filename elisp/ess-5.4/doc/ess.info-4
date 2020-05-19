@@ -1,0 +1,1173 @@
+This is ess.info, produced by makeinfo version 4.2 from ess.texi.
+
+ESS -- Emacs Speaks Statistics
+******************************
+
+INFO-DIR-SECTION Emacs
+START-INFO-DIR-ENTRY
+* ESS: (ess). Emacs Speaks Statistics (S/S+/R, SAS, BUGS/JAGS, Stata, XLisp-Stat).
+END-INFO-DIR-ENTRY
+
+
+File: ess.info,  Node: Editing R documentation files,  Next: Help,  Prev: Editing,  Up: Top
+
+Editing R documentation files
+*****************************
+
+   ESS also provides support for editing "R documentation" ("Rd")
+files.  R objects are documented in files written in Rd format, a
+simple markup language closely resembling (La)TeX, which can be
+processed into a variety of formats, including LaTeX, HTML, and plain
+text.  Rd format is described in section "Rd format" of the "Writing R
+Extensions" manual in the R distribution.
+
+   Visiting an Rd file as characterized by its extension `Rd' will
+activate Rd Mode, which provides several facilities for making editing R
+documentation files more convenient, by helping with indentation,
+insertions, even doing some of the typing for you (with Abbrev Mode),
+and by showing Rd keywords, strings, etc. in different faces (with Font
+Lock Mode).
+
+   Note that R also accepts Rd files with extension `rd'; to activate
+ESS[Rd] support for this extension, you may need to add
+
+     (add-to-list 'auto-mode-alist '("\\.rd\\'" . Rd-mode))
+
+to one of your Emacs startup files.
+
+   In Rd mode, the following special Emacs commands can be used in
+addition to the standard Emacs commands.
+
+`C-h m'
+     Describe the features of Rd mode.
+
+`LFD'
+`RET'
+     Reindent the current line, insert a newline and indent the new line
+     (`reindent-then-newline-and-indent').  An abbrev before point is
+     expanded if `abbrev-mode' is non-`nil'.
+
+`TAB'
+     Indent current line based on its contents and on previous lines
+     (`indent-according-to-mode').
+
+`C-c C-e'
+     Insert a "skeleton" with Rd markup for at least all mandatory
+     entries in Rd files (`Rd-mode-insert-skeleton').  Note that many
+     users might prefer to use the R function `prompt' on an existing R
+     object to generate a non-empty Rd "shell" documenting the object
+     (which already has all information filled in which can be obtained
+     from the object).
+
+`C-c C-f'
+     Insert "font" specifiers for some of the Rd markup commands markup
+     available for emphasizing or quoting text, including markup for
+     URLs and email addresses (`Rd-font').  `C-c C-f' is only a prefix;
+     see e.g. `C-c C-f TAB' for the available bindings.  Note that
+     currently, not all of the Rd text markup as described in section
+     "Marking text" of "Writing R Extensions" can be accessed via `C-c
+     C-f'.
+
+`C-c C-j'
+     Insert a suitably indented  `\item{' on the next line
+     (`Rd-mode-insert-item').
+
+`C-c C-p'
+     Preview a plain text version ("help file", *note Help::) generated
+     from the Rd file (`Rd-preview-help').
+
+   In addition, when editing Rd files one can interact with a running R
+process in a similar way as when editing R language files.  E.g., `C-c
+C-v' provides access to on-line help, and `C-c C-n' sends the current
+line to the R process for evaluation.  This interaction is particularly
+useful when editing the examples in the Rd file.  See `C-h m' for all
+available commands.
+
+   Rd mode also provides access to abbreviations for most of the Rd
+markup commands.  Type `M-x list-abbrevs' with Abbrev mode turned on to
+list all available abbrevs.  Note that all Rd abbrevs start with a grave
+accent.
+
+   Rd mode can be customized via the following variables.
+
+`Rd-mode-hook'
+     Hook to be run when Rd mode is entered.
+
+`Rd-indent-level'
+     The indentation of Rd code with respect to containing blocks.
+     Default is 2.
+
+`Rd-to-help-command'
+     The shell command used for converting Rd source to help text.
+     Default is `R CMD Rd2txt'.
+
+   To automatically turn on the abbrev and font-lock features of Rd
+mode, add the following lines to one of your Emacs startup files:
+
+     (add-hook 'Rd-mode-hook
+               (lambda ()
+                (abbrev-mode 1)
+                (font-lock-mode 1)))
+
+
+File: ess.info,  Node: Help,  Next: ESS for SAS,  Prev: Editing R documentation files,  Up: Top
+
+Reading help files
+******************
+
+   ESS provides an easy-to-use facility for reading S help files from
+within Emacs.  From within the ESS process buffer or any ESS edit
+buffer, typing `C-c C-v' (`ess-display-help-on-object') will prompt you
+for the name of an object for which you would like documentation.
+Completion is provided over all objects which have help files.
+
+   If the requested object has documentation, you will be popped into a
+buffer (named `*help(OBJ-NAME)*') containing the help file.  This
+buffer is placed in a special `S Help' mode which disables the usual
+editing commands but which provides a number of keys for paging through
+the help file:
+
+     Help commands:
+
+   * `?' (`ess-describe-help-mode')
+     Pops up a help buffer with a list of the commands available in S
+     help mode.
+
+   * `h' (`ess-display-help-on-object')
+     Pop up a help buffer for a different object
+
+     Paging commands:
+
+   * `b' or `DEL' (`scroll-down')
+     Move one page backwards through the help file.
+
+   * `SPC' (`scroll-up')
+     Move one page forwards through the help file.
+
+   * `>' (`beginning-of-buffer') and `<' (`end-of-buffer')
+     Move to the beginning and end of the help file, respectively.
+
+     Section-based motion commands:
+
+   * `n' (`ess-skip-to-next-section') and `p'
+     (`ess-skip-to-previous-section')
+     Move to the next and previous section header in the help file,
+     respectively.  A section header consists of a number of
+     capitalized words, followed by a colon.
+
+     In addition, the `s' key followed by one of the following letters
+     will jump to a particular section in the help file.  Note that R
+     uses capitalized instead of all-capital section headers, e.g.,
+     `Description:' instead of  `DESCRIPTION:' and also only some
+     versions of S(-plus) have sections `BACKGROUND', `BUGS', `OPTIONAL
+     ARGUMENTS', `REQUIRED ARGUMENTS', and `SIDE EFFECTS'.
+
+     Do use `s ?' to get the current list of active key bindings.
+    `a'
+          ARGUMENTS:
+
+    `b'
+          BACKGROUND:
+
+    `B'
+          BUGS:
+
+    `d'
+          DESCRIPTION:
+
+    `D'
+          DETAILS:
+
+    `e'
+          EXAMPLES:
+
+    `n'
+          NOTE:
+
+    `O'
+          OPTIONAL ARGUMENTS:
+
+    `R'
+          REQUIRED ARGUMENTS:
+
+    `r'
+          REFERENCES:
+
+    `s'
+          SEE ALSO:
+
+    `S'
+          SIDE EFFECTS:
+
+    `u'
+          USAGE:
+
+    `v'
+          VALUE:
+
+    `<'
+          Jumps to beginning of file
+
+    `>'
+          Jumps to end of file
+
+    `?'
+          Pops up a help buffer with a list of the defined section
+          motion keys.
+
+     Miscellaneous:
+
+   * `l' (`ess-eval-line-and-step')
+     Evaluates the current line in the ESS process, and moves to the
+     next line.  Useful for running examples in help files.
+
+   * `r' (`ess-eval-region')
+     Send the contents of the current region to the ESS process.  Useful
+     for running examples in help files.
+
+   * `/' (`isearch-forward')
+     Same as `C-s'.
+
+     Quit commands:
+
+   * `q' (`ess-switch-to-end-of-ESS')
+     Returns to the ESS process buffer in another window, leaving the
+     help window visible.
+
+   * `k' (`kill-buffer')
+     Kills the help buffer.
+
+   * `x' (`ess-kill-buffer-and-go')
+     Return to the ESS process, killing this help buffer.
+
+   In addition, all of the ESS commands available in the edit buffers
+are also available in S help mode (*note Edit buffer::).  Of course, the
+usual (non-editing) Emacs commands are available, and for convenience
+the digits and <-> act as prefix arguments.
+
+   If a help buffer already exists for an object for which help is
+requested, that buffer is popped to immediately; the ESS process is not
+consulted at all.  If the contents of the help file have changed, you
+either need to kill the help buffer first, or pass a prefix argument
+(with `C-u') to `ess-display-help-on-object'.
+
+   Help buffers are marked as temporary buffers in ESS, and are deleted
+when `ess-quit' or `ess-cleanup' are called.
+
+   Help buffers normally appear in another window within the current
+frame.  If you wish help buffers to appear in their own frame (either
+one per help buffer, or one for all help buffers), you can customize the
+variable `ess-help-own-frame'.
+
+
+File: ess.info,  Node: ESS for SAS,  Next: ESS for BUGS,  Prev: Help,  Up: Top
+
+ESS for SAS
+***********
+
+* Menu:
+
+* ESS(SAS)--Design philosophy::
+* ESS(SAS)--Editing files::
+* ESS(SAS)--TAB key::
+* ESS(SAS)--Batch SAS processes::
+* ESS(SAS)--Function keys for batch processing::
+* iESS(SAS)--Interactive SAS processes::
+* iESS(SAS)--Common problems::
+* ESS(SAS)--Graphics::
+* ESS(SAS)--Windows::
+
+   ESS[SAS] was designed for use with SAS.  It is descended from emacs
+macros developed by John Sall for editing SAS programs and `SAS-mode' by
+Tom Cook.  Those editing features and new advanced features are part of
+ESS[SAS].  The user interface of ESS[SAS] has similarities with ESS[S]
+and the SAS Display Manager.
+
+
+File: ess.info,  Node: ESS(SAS)--Design philosophy,  Next: ESS(SAS)--Editing files,  Prev: ESS for SAS,  Up: ESS for SAS
+
+ESS(SAS)-Design philosophy
+==========================
+
+   ESS[SAS] was designed to aid the user in writing and maintaining SAS
+programs, such as `FOO.sas'.  Both interactive and batch submission of
+SAS programs is supported.
+
+   ESS[SAS] was written with two primary goals.
+  1. The emacs text editor provides a powerful and flexible development
+     environment for programming languages.  These features are a boon
+     to all programmers and, with the help of ESS[SAS], to SAS users as
+     well.
+
+  2. Although a departure from SAS Display Manager, ESS[SAS] provides
+     similar key definitions to give novice ESS[SAS] users a head start.
+     Also, inconvenient SAS Display Manager features, like remote
+     submission and syntax highlighting, are provided transparently;
+     appealing to advanced ESS[SAS] users.
+
+
+File: ess.info,  Node: ESS(SAS)--Editing files,  Next: ESS(SAS)--TAB key,  Prev: ESS(SAS)--Design philosophy,  Up: ESS for SAS
+
+ESS(SAS)-Editing files
+======================
+
+   ESS[SAS] is the mode for editing SAS language files.  This mode
+handles:
+
+   * proper indenting, generated by both <TAB> and <RET>.
+
+   * color and font choices based on syntax.
+
+   * ability to save and submit the file you are working on as a batch
+     SAS process with a single keypress and to continue editing while
+     it is runs in the background.
+
+   * capability of killing the batch SAS process through the `*shell*'
+     buffer or allow the SAS process to keep on running after you exit
+     emacs.
+
+   * single keypress navigation of `.sas', `.log' and `.lst' files
+     (`.log' and `.lst' files are refreshed with each keypress).
+
+   * ability to send the contents of an entire buffer, a highlighted
+     region, or a single line to an interactive SAS process.
+
+   * ability to switch between processes which would be the target of
+     the buffer (for the above).
+
+   ESS[SAS] is automatically turned on when editing a file with a `.sas'
+suffix (or other extension, if specified via `auto-mode-alist').  The
+function keys can be enabled to use the same function keys that the SAS
+Display Manager does.  The interactive capabilities of ESS require you
+to start an inferior SAS process with `M-x SAS' (*Note
+iESS(SAS)--Interactive SAS processes::.)
+
+   At this writing, the indenting and syntax highlighting are generally
+correct.  Known issues: for multiple line `*' or `%*' comments, only the
+first line is highlighted; for `.log' files, only the first line of a
+`NOTE:', `WARNING:' or `ERROR:' message is highlighted; unmatched
+single/double quotes in `CARDS' data lines are *NOT* ignored; in an
+iterative `DO' statement, `TO' and `BY' are not highlighted.
+
+
+File: ess.info,  Node: ESS(SAS)--TAB key,  Next: ESS(SAS)--Batch SAS processes,  Prev: ESS(SAS)--Editing files,  Up: ESS for SAS
+
+ESS(SAS)-<TAB> key
+==================
+
+   Two options.  The <TAB> key is bound by default to
+`sas-indent-line'.  This function is used to syntactically indent SAS
+code so `PROC' and `RUN' are in the left margin, other statements are
+indented `sas-indent-width' spaces from the margin, continuation lines
+are indented `sas-indent-width' spaces in from the beginning column of
+that statement.  This is the type of functionality that emacs provides
+in most programming language modes.  This functionality is equivalent to
+uncommenting the following line in `ess-site.el':
+     (setq ess-sas-edit-keys-toggle nil)
+
+   ESS provides an alternate behavior for <TAB> that makes it behave as
+it does in SAS Display Manager, i.e. move the cursor to the next stop.
+The alternate behavior also provides a "TAB" backwards, `C-<TAB>', that
+moves the cursor to the stop to the left and deletes any characters
+between them.  This functionality is obtained by uncommenting the
+following line in `ess-site.el':
+     (setq ess-sas-edit-keys-toggle t)
+   Under the alternate behavior, <TAB> is bound to `M-x tab-to-tab-stop'
+and the stops are defined by `ess-sas-tab-stop-list'.
+
+
+File: ess.info,  Node: ESS(SAS)--Batch SAS processes,  Next: ESS(SAS)--Function keys for batch processing,  Prev: ESS(SAS)--TAB key,  Up: ESS for SAS
+
+ESS(SAS)-Batch SAS processes
+============================
+
+   Submission of a SAS batch job is dependent on your environment.
+`ess-sas-submit-method' is determined by your operating system and your
+shell.  It defaults to `'sh' unless you are running Windows or Mac
+Classic.  Under Windows, it will default to `'sh' if you are using a
+UNIX-imitating shell; otherwise `'ms-dos' for an MS-DOS shell.  On Mac
+OS X, it will default to `'sh', but under Mac Classic, it defaults to
+`'apple-script'.  You will also set this to `'sh' if the SAS batch job
+needs to run on a remote machine rather than your local machine.  This
+works transparently if you are editing the remote file via ange-ftp/EFS
+or tramp.  Note that `ess-sas-shell-buffer-remote-init' is a Local
+Variable that defaults to `"ssh"' which will be used to open the buffer
+on the remote host and it is assumed that no password is necessary,
+i.e. you are using `ssh-agent'/`ssh-add' or the equivalent (see the
+discussion about Local Variables below if you need to change the
+default).
+
+   However, if you are editing the file locally and transferring it
+back and forth with Kermit, you need some additional steps.  First,
+start Kermit locally before remotely logging in.  Open a local copy of
+the file with the `ess-kermit-prefix' character prepended (the default
+is `"#"').  Execute the command `M-x ess-kermit-get' which
+automatically brings the contents of the remote file into your local
+copy.  If you transfer files with Kermit manually in a `*shell*'
+buffer, then note that the Kermit escape sequence is `C-q C- c' rather
+than `C- c' which it would be in an ordinary terminal application, i.e.
+not in an emacs buffer.  Lastly, note that the remote Kermit command is
+specified by `ess-kermit-command'.
+
+   The command used by the `SUBMIT' function key (<F3> or <F8>) to
+submit a batch SAS job, whether local or remote, is
+`ess-sas-submit-command' which defaults to `sas-program'.
+`sas-program' is `"invoke SAS using program file"' for Mac Classic and
+`"sas"' otherwise.  However, you may have to alter
+`ess-sas-submit-command' for a particular program, so it is defined as
+buffer-local.  Conveniently, it can be set at the end of the program:
+     endsas;
+     Local variables:
+     ess-sas-submit-command: "sas8"
+     End:
+
+   The command line is also made of `ess-sas-submit-pre-command',
+`ess-sas-submit-post-command' and `ess-sas-submit-command-options' (the
+last of which is also buffer-local).  Here are some examples for your
+`~/.emacs' or `~/.xemacs/init.el' file (you may also use
+`M-x customize-variable'):
+     ;'sh default
+     (setq ess-sas-submit-pre-command "nohup")
+     ;'sh default
+     (setq ess-sas-submit-post-command "-rsasuser &")
+     ;'sh example
+     (setq-default ess-sas-submit-command "/usr/local/sas/sas")
+     ;'ms-dos default
+     (setq ess-sas-submit-pre-command "start")
+     ;'ms-dos default
+     (setq ess-sas-submit-post-command "-rsasuser -icon")
+     ;Windows example
+     (setq-default ess-sas-submit-command "c:/progra~1/sas/sas.exe")
+     ;Windows example
+     (setq-default ess-sas-submit-command "c:\\progra~1\\sas\\sas.exe")
+
+   There is a built-in delay before a batch SAS job is submitted when
+using a UNIX-imitating shell under Windows.  This is necessary in many
+cases since the shell might not be ready to receive a command.  This
+delay is currently set high enough so as not to be a problem.  But,
+there may be cases when it needs to be set higher, or could be set much
+lower to speed things up.  You can over-ride the default in your
+`~/.emacs' or `~/.xemacs/init.el' file by:
+     (setq ess-sleep-for 0.2)
+
+   For example, `(setq ess-sas-global-unix-keys t)' keys shown, `(setq
+ess-sas-global-pc-keys t)' in parentheses; ESS[SAS] function keys are
+presented in the next section.  Open the file you want to work with
+`C-x C-f foo.sas'.  `FOO.sas' will be in ESS[SAS] mode.  Edit as
+appropriate, then save and submit the batch SAS job.
+     <F3> (<F8>)
+   The job runs in the `*shell*' buffer while you continue to edit
+`FOO.sas'.  If `ess-sas-submit-method' is `'sh', then the message
+buffer will display the shell notification when the job is complete.
+The `'sh' setting also allows you to terminate the SAS batch job before
+it is finished.
+     <F8> (<F3>)
+   Terminating a SAS batch in the `*shell*' buffer.
+     kill PID
+   You may want to visit the `.log' (whether the job is still running
+or it is finished) and check for error messages.  The `.log' will be
+refreshed and you will be placed in it's buffer.  You will be taken to
+the first error message, if any.
+     <F5> (<F6>)
+   Goto the next error message, if any.
+     <F5> (<F6>)
+   Now, `refresh' the `.lst' and go to it's buffer.
+     <F6> (<F7>)
+   If you wish to make changes, go to the `.sas' file with.
+     <F4> (<F5>)
+   Make your editing changes and submit again.
+     <F3> (<F8>)
+
+
+File: ess.info,  Node: ESS(SAS)--Function keys for batch processing,  Next: iESS(SAS)--Interactive SAS processes,  Prev: ESS(SAS)--Batch SAS processes,  Up: ESS for SAS
+
+ESS(SAS)-Function keys for batch processing
+===========================================
+
+   The setup of function keys for SAS batch processing is unavoidably
+complex, but the usage of function keys is simple.  There are five
+distinct options:
+
+   Option 1 (default).  Function keys in ESS[SAS] are not bound to elisp
+commands.  This is in accordance with the GNU Elisp Coding Standards
+(GECS) which do not allow function keys to be bound so that they are
+available to the user.
+
+   Options 2-5.  Since GECS does not allow function keys to be bound by
+modes, these keys are often unused.  So, ESS[SAS] provides users with
+the option of binding elisp commands to these keys.  Users who are
+familiar with SAS will, most likely, want to duplicate the function key
+capabilities of the SAS Display Manager.  There are four options (noted
+in parentheses).
+
+  a. SAS Display Manager has different function key definitions for
+     UNIX (2, 4) and Windows (3, 5); ESS[SAS] can use either.
+
+  b. The ESS[SAS] function key definitions can be active in all buffers
+     (global: 4, 5) or limited (local: 2, 3) only to buffers with files
+     that are associated with ESS[SAS] as specified in your
+     `auto-mode-alist'.
+
+   The distinction between local and global is subtle.  If you want the
+ESS[SAS] definitions to work when you are in the `*shell*' buffer or
+when editing files other than the file extensions that ESS[SAS]
+recognizes, you will most likely want to use the global definitions.
+If you want your function keys to understand SAS batch commands when
+you are editing SAS files, and to behave normally when editing other
+files, then you will choose the local definitions.  The option can be
+chosen by the person installing ESS for a site or by an individual.
+
+  a. For a site installation or an individual, uncomment *ONLY ONE* of
+     the following lines in your `ess-site.el'.  ESS[SAS] function keys
+     are available in ESS[SAS] if you uncomment either 2 or 3 and in
+     all modes if you uncomment 4 or 5:
+          ;;2; (setq ess-sas-local-unix-keys t)
+          ;;3; (setq ess-sas-local-pc-keys t)
+          ;;4; (setq ess-sas-global-unix-keys t)
+          ;;5; (setq ess-sas-global-pc-keys t)
+
+     The names `-unix-' and `-pc-' have nothing to do with the
+     operating system that you are running.  Rather, they mimic the
+     definitions that the SAS Display Manager uses by default on those
+     platforms.
+
+  b. If your site installation has configured the keys contrary to your
+     liking, then you must call the appropriate function.
+           (load "ess-site") ;; local-unix-keys
+           (ess-sas-global-pc-keys)
+
+   Finally, we get to what the function keys actually do.  You may
+recognize some of the nicknames as SAS Display Manager commands (they
+are in all capitals).
+
+UNIX     PC       Nickname
+<F2>     <F2>     `refresh'
+                  revert the current buffer with the file of the same
+                  name if the file is newer than the buffer
+<F3>     <F8>     `SUBMIT'
+                  save the current `.sas' file (which is either the `.sas'
+                  file in the current buffer or the `.sas' file associated
+                   with the `.lst' or `.log' file in the current buffer)
+                  and submit the file as a batch SAS job
+<F4>     <F5>     `PROGRAM'
+                  switch buffer to `.sas' file
+<F5>     <F6>     `LOG'
+                  switch buffer to `.log' file, `refresh' and goto next
+                  error message, if any
+<F6>     <F7>     `OUTPUT'
+                  switch buffer to `.lst' file and `refresh'
+<F7>     <F4>     `filetype-1'
+                  switch buffer to `filetype-1' (defaults to `.txt') file
+                  and `refresh'
+<F8>     <F3>     `shell'
+                  switch buffer to `*shell*'
+<F9>     <F9>     `VIEWTABLE'
+                  open an interactive `PROC FSEDIT' session on the SAS
+                  dataset near point
+<F10>    <F10>    toggle-log
+                  toggle ESS[SAS] for `.log' files; useful for certain
+                  debugging situations
+<F11>    <F11>    `filetype-2'
+                  switch buffer to `filetype-2' (defaults to `.dat') file
+                  and `refresh'
+<F12>    <F12>    viewgraph
+                  open a `GSASFILE' near point for viewing either in emacs
+                  or with an external viewer
+`C-<F1>' `C-<F1>' rtf-portrait
+                  create an MS RTF portrait file from the current buffer
+                  with a file extension of `.rtf'
+`C-<F2>' `C-<F2>' rtf-landscape
+                  create an MS RTF landscape file from the current buffer
+                  with a file extension of `.rtf'
+`C-<F3>' `C-<F8>' submit-region
+                  write region to `ess-temp.sas' and submit
+`C-<F5>' `C-<F6>' append-to-log
+                  append `ess-temp.log' to the current `.log' file
+`C-<F6>' `C-<F7>' append-to-output
+                  append `ess-temp.lst' to the current `.lst' file
+`C-<F9>' `C-<F9>' `INSIGHT'
+                  open an interactive `PROC INSIGHT' session on the SAS
+                  dataset near point
+`C-<F10>'`C-<F10>'toggle-listing
+                  toggle ESS[SAS] for `.lst' files; useful for toggling
+                  read-only
+
+   `SUBMIT', `PROGRAM', `LOG' and `OUTPUT' need no further explanation
+since they mimic the SAS Display Manager commands and related function
+key definitions.  However, six other keys have been provided for
+convenience and are described below.
+
+   `shell' switches you to the `*shell*' buffer where you can interact
+with your operating system.  This is especially helpful if you would
+like to kill a SAS batch job.  You can specify a different buffer name
+to associate with a SAS batch job (besides `*shell*') with the
+buffer-local variable `ess-sas-shell-buffer'.  This allows you to have
+multiple buffers running SAS batch jobs on multiple local/remote
+computers that may rely on different methods specified by the
+buffer-local variable `ess-sas-submit-method'.
+
+   <F2> performs the `refresh' operation on the current buffer.
+`refresh' compares the buffer's last modified date/time with the file's
+last modified date/time and replaces the buffer with the file if the
+file is newer.  This is the same operation that is automatically
+performed when `LOG', `OUTPUT', `filetype-1' or <F11> are pressed.
+
+   `filetype-1' switches you to a file with the same file name as your
+`.sas' file, but with a different extension (`.txt' by default) and
+performs `refresh'.  You can over-ride the default extension; for
+example in your `~/.emacs' or `~/.xemacs/init.el' file:
+     (setq ess-sas-suffix-1 "csv") ; for example
+
+   <F9> will prompt you for the name of a permanent SAS dataset near
+point to be opened for viewing by `PROC FSEDIT'.  You can control the
+SAS batch command-line with `ess-sas-data-view-submit-options'.  For
+controlling the SAS batch commands, you have the global variables
+`ess-sas-data-view-libname' and `ess-sas-data-view-fsview-command' as
+well as the buffer-local variable `ess-sas-data-view-fsview-statement'.
+If you have your SAS `LIBNAME' defined in `~/autoexec.sas', then the
+defaults for these variables should be sufficient.
+
+   Similarly, `C-<F9>' will prompt you for the name of a permanent SAS
+dataset near point to be opened for viewing by `PROC INSIGHT'.  You can
+control the SAS batch command-line with
+`ess-sas-data-view-submit-options'.  For controlling the SAS batch
+commands, you have the global variables `ess-sas-data-view-libname' and
+`ess-sas-data-view-insight-command' as well as the buffer-local
+variable `ess-sas-data-view-insight-statement'.
+
+   <F10> toggles ESS[SAS] mode for `.log' files which is off by default
+(technically, it is `SAS-log-mode', but it looks the same).  The syntax
+highlighting can be helpful in certain debugging situations, but large
+`.log' files may take a long time to highlight.
+
+   <F11> is the same as `filetype-1' except it is `.dat' by default.
+
+   <F12> will prompt you for the name of a `GSASFILE' near the point in
+`.log' to be opened for viewing either with emacs or with an external
+viewer.  Depending on your version of emacs and the operating system
+you are using, emacs may support `.gif' and `.jpg' files internally.
+You may need to change the following variables for your own situation.
+`ess-sas-graph-view-suffix-regexp' is a regular expression of supported
+file types defined via file name extensions.
+`ess-sas-graph-view-viewer-default' is the default external viewer for
+your platform.  `ess-sas-graph-view-viewer-alist' is an alist of
+exceptions to the default; i.e. file types and their associated viewers
+which will be used rather than the default viewer.
+     (setq ess-sas-graph-view-suffix-regexp (concat "[.]\\([eE]?[pP][sS]\\|"
+     "[pP][dD][fF]\\|[gG][iI][fF]\\|[jJ][pP][eE]?[gG]\\|"
+     "[tT][iI][fF][fF]?\\)")) ;; default
+     (setq ess-sas-graph-view-viewer-default "kodakimg") ;; Windows default
+     (setq ess-sas-graph-view-viewer-default "sdtimage") ;; Solaris default
+     (setq ess-sas-graph-view-viewer-alist
+       '(("[eE]?[pP][sS]" . "gv") ("[pP][dD][fF]" . "gv")) ;; default w/ gv
+
+   `C-<F2>' produces US landscape by default, however, it can produce A4
+landscape (first line for "global" key mapping, second for "local"):
+     (global-set-key [(control f2)] 'ess-sas-rtf-a4-landscape)
+     (define-key sas-mode-local-map [(control f2)] 'ess-sas-rtf-a4-landscape)
+
+
+File: ess.info,  Node: iESS(SAS)--Interactive SAS processes,  Next: iESS(SAS)--Common problems,  Prev: ESS(SAS)--Function keys for batch processing,  Up: ESS for SAS
+
+iESS(SAS)-Interactive SAS processes
+===================================
+
+   Inferior ESS (iESS) is the method for interfacing with interactive
+statistical processes (programs).  iESS[SAS] is what is needed for
+interactive SAS programming.  iESS[SAS] works best with the SAS
+command-line option settings `"-stdio -linesize 80 -noovp
+-nosyntaxcheck"' (the default of `inferior-SAS-args').
+
+     `-stdio'
+                 required to make the redirection of stdio work
+     `-linesize 80'
+                 keeps output lines from folding on standard terminals
+     `-noovp'
+                 prevents error messages from printing 3 times
+     `-nosyntaxcheck'
+                 permits recovery after syntax errors
+
+   To start up iESS[SAS] mode, use:
+        M-x SAS
+
+   The `*SAS:1.log*' buffer in `ESStr' mode corresponds to the file
+`FOO.log' in SAS batch usage and to the `SAS: LOG' window in the SAS
+Display Manager.  All commands submitted to SAS, informative messages,
+warnings, and errors appear here.
+
+   The `*SAS:1.lst*' buffer in `ESSlst' mode corresponds to the file
+`FOO.lst' in SAS batch usage and to the `SAS: OUTPUT' window in the SAS
+Display Manager.  All printed output appears in this window.
+
+   The `*SAS:1*' buffer exists solely as a communications buffer.  The
+user should never use this buffer directly.  Files are edited in the
+`FOO.sas' buffer.  The `C-c C-r' key in ESS[SAS] is the functional
+equivalent of bringing a file into the `SAS: PROGRAM EDITOR' window
+followed by `SUBMIT'.
+
+   For example, open the file you want to work with.
+     C-x C-f foo.sas
+   `FOO.sas' will be in ESS[SAS] mode.  Edit as appropriate, and then
+start up SAS with the cursor in the `FOO.sas' buffer.
+     M-x SAS
+   Four buffers will appear on screen:
+Buffer         Mode              Description
+`FOO.sas'      `ESS[SAS]'        your source file
+`*SAS:1*'      `iESS[SAS:1]'     iESS communication buffer
+`*SAS:1.log*'  `Shell ESStr []'  SAS log information
+`*SAS:1.lst*'  `Shell ESSlst     SAS listing information
+               []'               
+   If you would prefer each of the four buffers to appear in its own
+individual frame, you can arrange for that.  Place the cursor in the
+buffer displaying `FOO.sas'.  Enter the sequence `C-c C-w'. The cursor
+will normally be in buffer `FOO.sas'.  If not, put it there and
+`C-x b FOO.sas'.
+
+   Send regions, lines, or the entire file contents to SAS (regions are
+most useful:  a highlighted region will normally begin with the
+keywords `DATA' or `PROC' and end with `RUN;'), `C-c C-r'.
+
+   Information appears in the log buffer, analysis results in the
+listing buffer.  In case of errors, make the corrections in the
+`FOO.sas' buffer and resubmit with another `C-c C-r'.
+
+   At the end of the session you may save the log and listing buffers
+with the usual `C-x C-s' commands.  You will be prompted for a file
+name.  Typically, the names `FOO.log' and `FOO.lst' will be used.  You
+will almost certainly want to edit the saved files before including
+them in a report.  The files are read-only by default.  You can make
+them writable by the emacs command `C-x C-q'.
+
+   At the end of the session, the input file `FOO.sas' will typically
+have been revised.  You can save it.  It can be used later as the
+beginning of another iESS[SAS] session.  It can also be used as a batch
+input file to SAS.
+
+   The `*SAS:1*' buffer is strictly for ESS use.  The user should never
+need to read it or write to it.  Refer to the `.lst' and `.log' buffers
+for monitoring output!
+
+   Troubleshooting: *Note iESS(SAS)--Common problems::.
+
+
+File: ess.info,  Node: iESS(SAS)--Common problems,  Next: ESS(SAS)--Graphics,  Prev: iESS(SAS)--Interactive SAS processes,  Up: ESS for SAS
+
+iESS(SAS)-Common problems
+=========================
+
+  1. iESS[SAS] does not work on Windows.  In order to run SAS inside an
+     emacs buffer, it is necessary to start SAS with the `-stdio'
+     option.  SAS does not support the `-stdio' option on Windows.
+
+  2. If `M-x SAS' gives errors upon startup, check the following:
+        * you are running Windows:  see 1.
+
+        * `ess-sas-sh-command' (from the ESS `etc' directory) needs to
+          be executable; too check, type `M-x dired'; if not, fix it as
+          follows, type `M-:', then at the minibuffer prompt `Eval:',
+          type `(set-file-modes "ess-sas-sh-command" 493)'.
+
+        * `sas' isn't in your executable path; to verify, type `M-:'
+          and at the minibuffer prompt `Eval:', type `(executable-find
+          "sas")'
+
+  3. `M-x SAS' starts SAS Display Manager.  Probably, the command `sas'
+     on your system calls a shell script.  In that case you will need
+     to locate the real  `sas' executable and link to it.  You can
+     execute the UNIX command:
+          find / -name sas -print
+     Now place a soft link to the real `sas' executable in your `~/bin'
+     directory, with for example
+          cd ~/bin
+          ln -s /usr/local/sas9/sas sas
+     Check your `PATH' environment variable to confirm that `~/bin'
+appears before the directory in which the `sas' shell script appears.
+
+
+File: ess.info,  Node: ESS(SAS)--Graphics,  Next: ESS(SAS)--Windows,  Prev: iESS(SAS)--Common problems,  Up: ESS for SAS
+
+ESS(SAS)-Graphics
+=================
+
+   Output from a SAS/GRAPH `PROC' can be displayed in a SAS/GRAPH
+window for SAS batch on Windows or for both SAS batch and interactive
+with XWindows on UNIX.  If you need to create graphics files and view
+them with <F12>, then include the following (either in `FOO.sas' or in
+`~/autoexec.sas'):
+     filename gsasfile 'graphics.ps';
+     goptions device=ps gsfname=gsasfile gsfmode=append;
+   `PROC PLOT' graphs can be viewed in the listing buffer.  You may
+wish to control the vertical spacing to allow the entire plot to be
+visible on screen, for example:
+     proc plot;
+         plot a*b / vpos=25;
+     run;
+
+
+File: ess.info,  Node: ESS(SAS)--Windows,  Prev: ESS(SAS)--Graphics,  Up: ESS for SAS
+
+ESS(SAS)-Windows
+================
+
+   * iESS[SAS] does not work on Windows.  *Note iESS(SAS)--Common
+     problems::.
+
+   * ESS[SAS] mode for editing SAS language files works very well.
+     *Note ESS(SAS)--Editing files::.
+
+   * There are two execution options for SAS on Windows.  You can use
+     batch.  *Note ESS(SAS)--Batch SAS processes::.
+
+     Or you can mark regions with the mouse and submit the code with
+     `submit-region' or paste them into SAS Display Manager.
+
+
+
+File: ess.info,  Node: ESS for BUGS,  Next: ESS for JAGS,  Prev: ESS for SAS,  Up: Top
+
+ESS for BUGS
+************
+
+* Menu:
+
+* ESS(BUGS)--Model files::
+* ESS(BUGS)--Command files::
+* ESS(BUGS)--Log files::
+
+   ESS[BUGS] was originally designed for use with BUGS software.
+Later, it evolved to support JAGS as a dialect of the BUGS language via
+ESS[JAGS], however, ESS[JAGS] is documented in the section Help for
+JAGS.  ESS[BUGS] provides 5 features.  First, BUGS syntax is described
+to allow for proper fontification of statements, distributions,
+functions, commands and comments in BUGS model files, command files and
+log files.  Second, ESS creates templates for the command file from the
+model file so that a BUGS batch process can be defined by a single
+file.  Third, ESS provides a BUGS batch script that allows ESS to set
+BUGS batch parameters.  Fourth, key sequences are defined to create a
+command file and submit a BUGS batch process.  Lastly, interactive
+submission of BUGS commands is also supported.
+
+
+File: ess.info,  Node: ESS(BUGS)--Model files,  Next: ESS(BUGS)--Command files,  Prev: ESS for BUGS,  Up: ESS for BUGS
+
+ESS[BUGS]-Model files
+=====================
+
+   Model files with the `.bug' extension are edited in ESS[BUGS] mode
+if `(require 'essd-bugs)' was performed or edited in ESS[JAGS] mode if
+`(require 'essd-jags)'.  Three keys are bound for your use in
+ESS[BUGS], `F2', `C-c C-c' and `='.  `F2' performs the same action as
+it does in ESS[SAS], *Note ESS(SAS)--Function keys for batch
+processing::.  `C-c C-c' performs the function `ess-bugs-next-action'
+which you will use a lot.  Pressing it in an empty buffer for a model
+file will produce a template for you.  `=' inserts the set operator,
+`<-'.
+
+   ESS[BUGS] supports "replacement" variables.  These variables are
+created as part of the template, i.e. with the first press of `C-c C-c'
+in an empty buffer.  They are named by all capitals and start with `%':
+`%N', `%DATA', `%INIT', `%MONITOR' and `%STATS'.  When you are finished
+editing your model file, pressing `C-c C-c' will perform the necessary
+replacements and build your command file for you.
+
+   The `%DATA' variable appears in the line `data in "%DATA";'.  On the
+second press of `C-c C-c', `%DATA' will be replaced by the model file
+name except it will have the `.dat' extension.  If your data file is
+named something else, then change `%DATA' in the template to the
+appropriate file name and no replacement will occur.
+
+   The `%INIT' variable appears in the line `inits in "%INIT";'.  On
+the second press of `C-c C-c', `%INIT' will be replaced by the model
+file name except it will have the .in extension.  If your model will be
+generating it's own initial values, place a comment character, `#', at
+the beginning of the line.  Or, if your init file is named something
+else, then change `%INIT' in the template to the appropriate file name.
+
+   The `%N' variable appears in the line `const N = 0;#%N'.  Although
+it is commented, it is still active.  Notice that later on in the
+template you have the line `for (i in 1:N)'.  The BUGS constant `N' is
+the number of rows in your data file.  When you press `C-c C-c', the
+data file is read and the number of lines are counted (after `%DATA' is
+resolved, if necessary).  The number of lines replace the zero in the
+`const N = 0;' statement.
+
+   The `%MONITOR' variable appears on a line by itself.  Although it is
+commented, it is still active.  This line is a list of variables that
+you want monitored.  When you press `C-c C-c', the appropriate
+statements are created in the command file to monitor the list of
+variables.  If the line is blank, then the list is populated with the
+variables from the `var' statement.
+
+   The `%STATS' variable is similar to the `%MONITOR' variable.  It is
+a list of variables for which summary statistics will be calculated.
+When you press `C-c C-c', the appropriate statements will be generated
+in your command file.
+
+   Please note that the `%DATA' and `%INIT' variables are only replaced
+on the second press of `C-c C-c', but the actions for `%N', `%MONITOR'
+and `%STATS' are performed on each press of `C-c C-c' if you re-visit
+the model file.
+
+
+File: ess.info,  Node: ESS(BUGS)--Command files,  Next: ESS(BUGS)--Log files,  Prev: ESS(BUGS)--Model files,  Up: ESS for BUGS
+
+ESS[BUGS]-Command files
+=======================
+
+   To avoid extension name collision, `.bmd' is used for BUGS command
+files and `.jmd' for JAGS command files.  When you have finished
+editing your model file and press `C-c C-c', a command file is created
+if one does not already exist.  However, the command file was created,
+it recognizes two "replacement" variables: `%MONITOR' and `%STATS'.
+
+   Two `%MONITOR' variables appears on lines by themselves.  Although
+they are commented, they are still active.  Between them appears the
+necessary statements to monitor the list of variables specified in the
+model file.  The behavior of the `%STATS' variable is similar.
+
+   When you are finished editing your command file, pressing `C-c C-c'
+again will submit your command file as a batch job.  BUGS batch scripts
+are provided for both Unix and DOS in the `etc' sub-directory of the
+ESS distribution.  The Unix script is `backbugs' for BUGS major version
+0.6 and `backbug5' for 0.5. The DOS script is `BACKBUGS.BAT' for BUGS
+major version 0.6 only.  These scripts allows ESS access to BUGS batch
+features that are not readily available with the batch scripts that
+come with BUGS.
+
+
+File: ess.info,  Node: ESS(BUGS)--Log files,  Prev: ESS(BUGS)--Command files,  Up: ESS for BUGS
+
+ESS[BUGS]-Log files
+===================
+
+   To avoid extension name collision, `.bog' is used for BUGS log
+files.  The BUGS batch script provided with ESS creates the `.bog' file
+from the `.log' file when the batch process completes.  If you need to
+look at the `.log' file while the batch process is running, it will not
+appear in ESS[BUGS] mode.  You may find `F2' useful to refresh the
+`.log' if the batch process over-writes or appends it.
+
+
+File: ess.info,  Node: ESS for JAGS,  Next: Miscellaneous,  Prev: ESS for BUGS,  Up: Top
+
+ESS for JAGS
+************
+
+* Menu:
+
+* ESS(JAGS)--Model files::
+* ESS(JAGS)--Command files::
+* ESS(JAGS)--Log files::
+
+   ESS[BUGS] was originally designed for use with BUGS software.
+Later, it evolved to support JAGS as a dialect of the BUGS language via
+ESS[JAGS].  Since BUGS and JAGS are quite similar, ESS[BUGS] and
+ESS[JAGS] are necessarily similar.  ESS[JAGS] provides 4 features.
+First, JAGS syntax is described to allow for proper fontification of
+statements, distributions, functions, commands and comments in JAGS
+model files, command files and log files.  Second, ESS creates
+templates for the command file from the model file so that a JAGS batch
+process can be defined by a single file.  Third, ESS provides a JAGS
+batch script that allows ESS to set JAGS batch parameters.  Fourth, key
+sequences are defined to create a command file and submit a JAGS batch
+process.
+
+
+File: ess.info,  Node: ESS(JAGS)--Model files,  Next: ESS(JAGS)--Command files,  Prev: ESS for JAGS,  Up: ESS for JAGS
+
+ESS[JAGS]-Model files
+=====================
+
+   Model files with the `.bug' extension are edited in ESS[BUGS] mode
+if `(require 'essd-bugs)' was performed or edited in ESS[JAGS] mode if
+`(require 'essd-jags)'.  Three keys are bound for your use in
+ESS[BUGS], `F2', `C-c C-c' and `='.  `F2' performs the same action as
+it does in ESS[SAS], *Note ESS(SAS)--Function keys for batch
+processing::.  `C-c C-c' performs the function `ess-bugs-next-action'
+which you will use a lot.  Pressing it in an empty buffer for a model
+file will produce a template for you.  `=' inserts the set operator,
+`<-'.
+
+   ESS[JAGS] does not support "replacement" variables which were part of
+ESS[BUGS].  Although, "replacement" variables are an extremely
+convenient feature, creating the elisp code for their operation was
+challenging.  So, a more elisp-ish approach was adopted for ESS[JAGS]:
+elisp local variables.  These variables are created as part of the
+template, i.e. with the first press of `C-c C-c' in an empty buffer.
+For your `.bug' file, they are named `ess-jags-chains',
+`ess-jags-monitor', `ess-jags-thin', `ess-jags-burnin' and
+`ess-jags-update'; they appear in the `Local Variables' section.  When
+you are finished editing your model file, pressing `C-c C-c' will
+perform the necessary actions to build your command file for you.
+
+   The `ess-jags-chains' variable is the number of chains that you want
+to initialize and sample from; defaults to 1.  The `ess-jags-monitor'
+variable is a list of variables that you want monitored: encase each
+variable in double quotes.  When you press `C-c C-c', the appropriate
+statements are created in the command file to monitor the list of
+variables.  By default, no variables are explicitly monitored which
+means JAGS will implicitly monitor all "default" variables.  The
+`ess-jags-thin' variable is the thinning parameter.  By default, the
+thinning parameter is set to 1, i.e. no thinning.  The
+`ess-jags-burnin' variable is the number of initial samples to discard.
+By default, the burnin parameter is set to 10000.  The
+`ess-jags-update' variable is the number of post-burnin samples to
+keep.  By default, the update parameter is set to 10000.  Both
+`ess-jags-burnin' and `ess-jags-update' are multiplied by
+`ess-jags-thin' since JAGS does not do it automatically.
+
+
+File: ess.info,  Node: ESS(JAGS)--Command files,  Next: ESS(JAGS)--Log files,  Prev: ESS(JAGS)--Model files,  Up: ESS for JAGS
+
+ESS[JAGS]-Command files
+=======================
+
+   To avoid extension name collision, `.bmd' is used for BUGS command
+files and `.jmd' for JAGS command files.  For your `.jmd' file, there
+is only one variable, `ess-jags-command', in the `Local Variables'
+section.  When you have finished editing your model file and press `C-c
+C-c', a command file is created if one does not already exist.  When
+you are finished editing your command file, pressing `C-c C-c' again
+will submit your command file as a batch job.  The `ess-jags-command'
+variable allows you to specify a different JAGS program to use to run
+your model; defaults to "jags".
+
+
+File: ess.info,  Node: ESS(JAGS)--Log files,  Prev: ESS(JAGS)--Command files,  Up: ESS for JAGS
+
+ESS[JAGS]-Log files
+===================
+
+   The `.jog' extension is used for JAGS log files.  You may find `F2'
+useful to refresh the `.jog' if the batch process over-writes or
+appends it.
+
+
+File: ess.info,  Node: Miscellaneous,  Next: Mailing lists/bug reports,  Prev: ESS for JAGS,  Up: Top
+
+Other features of ESS
+*********************
+
+   ESS has a few miscellaneous features, which didn't fit anywhere else.
+
+* Menu:
+
+* Highlighting::                Syntactic highlighting of buffers
+* Parens::                      Parenthesis matching
+* Graphics::                    Using graphics with ESS
+* Imenu::                       Support for Imenu in ESS
+* Toolbar::                     Support for toolbar in ESS
+* TAGS::                        Using TAGS for S files
+* Rdired::                      Directory editor for R objects
+
+
+File: ess.info,  Node: Highlighting,  Next: Parens,  Prev: Miscellaneous,  Up: Miscellaneous
+
+Syntactic highlighting of buffers
+=================================
+
+   ESS provides Font-Lock (*note Using Multiple Typefaces:
+(emacs)Faces.) patterns for Inferior S Mode, S Mode, and S Transcript
+Mode buffers.
+
+   Syntax highlighting within ESS buffers is controlled by the variable
+`ess-font-lock-mode', which by default is true.  Input to inferior ESS
+processes is also highlighted syntactically if
+`inferior-ess-font-lock-input' is non-nil (the default).  If you change
+the value of either of these varibles, you need to restart emacs for
+your changes to take effect.
+
+   The font-lock patterns are defined in the following variables, which
+you may modify if desired:
+
+ - Variable: inferior-ess-R-font-lock-keywords
+     Font-lock patterns for inferior *R* processes.  (There is a
+     corresponding `inferior-ess-S-font-lock-keywords' for *S*
+     processes.) The default value highlights prompts, inputs,
+     assignments, output messages, vector and matrix labels, and
+     literals such as `NA' and `TRUE'.
+
+ - Variable: ess-R-mode-font-lock-keywords
+     Font-lock patterns for ESS R programming mode.  (There is a
+     corresponding `ess-S-mode-font-lock-keywords' for S buffers.) The
+     default value highlights function names, literals, assignments,
+     source functions and reserved words.
+
+
+File: ess.info,  Node: Parens,  Next: Graphics,  Prev: Highlighting,  Up: Miscellaneous
+
+Parenthesis matching
+====================
+
+   Emacs and XEmacs have facilities for highlighting the parenthesis
+matching the parenthesis at point.  This feature is very useful when
+trying to examine which parentheses match each other.  This highlighting
+also indicates when parentheses are not matching.  Depending on what
+version of emacs you use, one of the following should work in your
+initialisation file:
+
+     (paren-set-mode 'paren) ;for XEmacs
+     (show-paren-mode t) ;for Emacs
+
+
+File: ess.info,  Node: Graphics,  Next: Imenu,  Prev: Parens,  Up: Miscellaneous
+
+Using graphics with ESS
+=======================
+
+   One of the main features of the `S' package is its ability to
+generate high-resolution graphics plots, and ESS provides a number of
+features for dealing with such plots.
+
+* Menu:
+
+* printer::                     The printer() graphics driver
+* X11::                         The X11() (and other X-windows based) driver
+* winjava::                     Java Graphics Device
+
+
+File: ess.info,  Node: printer,  Next: X11,  Prev: Graphics,  Up: Graphics
+
+Using ESS with the `printer()' driver
+-------------------------------------
+
+   This is the simplest (and least desirable) method of using graphics
+within ESS.  S's `printer()' device driver produces crude character
+based plots which can be contained within the ESS process buffer
+itself.  To start using character graphics, issue the S command
+     printer(width=79)
+   (the `width=79' argument prevents Emacs line-wrapping at column 80
+on an 80-column terminal.  Use a different value for a terminal with a
+different number of columns.) Plotting commands do not generate
+graphics immediately, but are stored until the `show()' command is
+issued, which displays the current figure.
+
+
+File: ess.info,  Node: X11,  Next: winjava,  Prev: printer,  Up: Graphics
+
+Using ESS with windowing devices
+--------------------------------
+
+   Of course, the ideal way to use graphics with ESS is to use a
+windowing system.  Under X11, this requires that the DISPLAY environment
+variable be appropriately set, which may not always be the case within
+your Emacs process.  ESS provides a facility for setting the value of
+DISPLAY before the ESS process is started if the variable
+`ess-ask-about-display' is non-`nil'.
+
+
+File: ess.info,  Node: winjava,  Prev: X11,  Up: Graphics
+
+Java Graphics Device
+--------------------
+
+   S+6.1 and newer on Windows contains a java library that supports
+graphics.  Send the commands:
+
+     library(winjava)
+     java.graph()
+
+to start the graphics driver.  This allows you to use ESS for both
+interaction and graphics within S-PLUS.  (Thanks to Tim Hesterberg for
+this information.)
+

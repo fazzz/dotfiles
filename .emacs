@@ -31,7 +31,7 @@
 (setq load-path
       (append
        (list
-	(expand-file-name "~/elisp/")
+	(expand-file-name "~/.elisp/")
 	)
        load-path))
 
@@ -53,7 +53,7 @@
 ;;      (normal-top-level-add-subdirs-to-load-path)))		    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;(setq load-path (cons "~/elisp " load-path))
+;(setq load-path (cons "~/.elisp " load-path))
 
 ;; comment ha hako gata
 (setq comment-style 'box)
@@ -78,19 +78,19 @@
 	  '(lambda () (inf-ruby-keys)))
 
 ;; ess 
-(setq load-path (cons "~/elisp/ess-5.4/lisp" load-path))
+(setq load-path (cons "~/.elisp/ess-5.4/lisp" load-path))
 
 (require 'ess-site)
 
-;; elisp no install
-(require 'install-elisp)
+;; .elisp no install
+(require 'install-.elisp)
 
-(setq install-elisp-repository-directory "~/elisp/") 
+(setq install-.elisp-repository-directory "~/.elisp/") 
 
 ;; elsip no jidou install
 (require 'auto-install)
 
-(setq auto-install-directory "~/elisp/")
+(setq auto-install-directory "~/.elisp/")
 
 (auto-install-update-emacswiki-package-name t)
 
