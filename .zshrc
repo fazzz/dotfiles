@@ -66,6 +66,7 @@ GMBX=$HOME/gomibako
 #PATH=$PATH:$HOME/$SCRIPT/gnuplot
 #PYTHONPATH=~/software/pymbar-2.0beta
 PATH=/opt/local/bin:/opt/local/sbin:$PATH
+PATH=$HOME/opt/bin:$PATH
 
 export GLOBUS_LOCATION
 export AMBERHOME

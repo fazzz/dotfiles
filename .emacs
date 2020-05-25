@@ -78,12 +78,12 @@
 	  '(lambda () (inf-ruby-keys)))
 
 ;; ess 
-(setq load-path (cons "~/.elisp/ess-5.4/lisp" load-path))
+;;(setq load-path (cons "~/.elisp/ess-5.4/lisp" load-path))
 
-(require 'ess-site)
+;;(require 'ess-site)
 
 ;; .elisp no install
-(require 'install-.elisp)
+(require 'install-elisp)
 
 (setq install-.elisp-repository-directory "~/.elisp/") 
 
@@ -176,11 +176,13 @@
 ;;;;;;;;;;
 ;; memo ;;
 ;;;;;;;;;;
-( defun memo ()
-  (interactive)
-  (add-change-log-entry
-   nil
-   (expand-file-name "~/.memo/diary.txt")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ( defun memo ()			       ;;
+;;   (interactive)			       ;;
+;;   (add-change-log-entry		       ;;
+;;    nil				       ;;
+;;    (expand-file-name "~/.memo/diary.txt"))) ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;(define-key global-map "\C-m" 'memo )
 
 (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
@@ -225,9 +227,11 @@
 ;;;;;;;;;;
 ;; memo ;;
 ;;;;;;;;;;
-( defun note ()
-  (interactive)
-  (add-change-log-entry
-   nil
-   (expand-file-name "~/Dropbox/.memo/note.txt")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ( defun note ()				      ;;
+;;   (interactive)				      ;;
+;;   (add-change-log-entry			      ;;
+;;    nil					      ;;
+;;    (expand-file-name "~/Dropbox/.memo/note.txt"))) ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

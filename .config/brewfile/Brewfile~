@@ -17,7 +17,7 @@ brew cloog
 brew cmake
 brew coq
 brew eigen
-brew emacs --with-gnutls
+#brew emacs --with-gnutls
 brew epstool
 brew fftw
 brew fig2dev
@@ -142,32 +142,32 @@ brew xz
 brew yasm
 brew zsh
 
-tap homebrew/dupes
+#tap homebrew/dupes
 
-tap homebrew/python
+#tap homebrew/python
 
-tap homebrew/science
+#tap homebrew/science
 
-tap homebrew/versions
+#tap homebrew/versions
 
-tap homebrew/x11
+#tap homebrew/x11
 
-tap homebrew/cask
+#tap homebrew/cask
 
-tap argon/mas
+#tap argon/mas
 
-tap rcmdnk/file
+#tap rcmdnk/file
 brew brew-file
 
 tap spl/pdftk
 
 # App Store applications
-appstore 594107751 Cloud Outliner Lite (1.6)
-appstore 682658836 GarageBand (10.2.0)
-appstore 408981381 iPhoto (9.6.1)
-appstore 409183694 Keynote (7.2)
-appstore 784801555 Microsoft OneNote (15.38)
-appstore 409203825 Numbers (4.2)
-appstore 823766827 OneDrive (17.3.6967)
-appstore 409201541 Pages (6.2)
-appstore 497799835 Xcode (8.3.1)
+#appstore 594107751 Cloud Outliner Lite (1.6)
+#appstore 682658836 GarageBand (10.2.0)
+#appstore 408981381 iPhoto (9.6.1)
+#appstore 409183694 Keynote (7.2)
+#appstore 784801555 Microsoft OneNote (15.38)
+#appstore 409203825 Numbers (4.2)
+#appstore 823766827 OneDrive (17.3.6967)
+#appstore 409201541 Pages (6.2)
+#appstore 497799835 Xcode (8.3.1)
